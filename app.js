@@ -52,6 +52,7 @@ async function prepareFiles(input, section) {
   if (window.YiXinCloud?.isEnabled()) {
     const uploaded = await window.YiXinCloud.uploadFiles(section, input.files);
     if (uploaded?.length) return uploaded;
+    if (hasFiles) throw new Error("照片上传到云端失败，请检查网络后再试。");
   }
   return hasFiles ? readFiles(input) : [];
 }
@@ -70,7 +71,8 @@ async function loadSharedContent(key, fallback) {
 async function saveSharedContent(key, value) {
   YiXinStore.set(key, value);
   if (window.YiXinCloud?.isEnabled()) {
-    await window.YiXinCloud.saveContent(key, value);
+    const saved = await window.YiXinCloud.saveContent(key, value);
+    if (!saved) throw new Error("内容没有同步到云端，请检查网络后再试。");
   }
 }
 

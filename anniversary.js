@@ -84,41 +84,49 @@ provinceSelect.addEventListener("change", () => renderCityOptions(provinceSelect
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const existing = anniversaries.find((item) => item.id === editingId);
-  const newPhotos = await prepareFiles(document.querySelector("#anniversaryPhotos"), "anniversaries/photos");
-  const draftFiles = restoredAnniversaryDraft?.files || {};
-  const keptPhotos = (existing?.photos || []).filter((_, index) => {
-    return !form.querySelector(`[data-delete-photo="${index}"]`)?.checked;
-  });
-  const entry = {
-    id: editingId || uid(),
-    date: document.querySelector("#anniversaryDate").value,
-    title: document.querySelector("#anniversaryTitle").value.trim(),
-    text: withEditorPrefix(document.querySelector("#anniversaryText").value.trim()),
-    location: {
-      country: countrySelect.value,
-      province: provinceSelect.value,
-      city: citySelect.value,
-      address: document.querySelector("#anniversaryAddress").value.trim(),
-    },
-    photos: [...keptPhotos, ...(newPhotos.length ? newPhotos : draftFiles.anniversaryPhotos || [])],
-  };
+  try {
+    const existing = anniversaries.find((item) => item.id === editingId);
+    const newPhotos = await prepareFiles(document.querySelector("#anniversaryPhotos"), "anniversaries/photos");
+    const draftFiles = restoredAnniversaryDraft?.files || {};
+    const keptPhotos = (existing?.photos || []).filter((_, index) => {
+      return !form.querySelector(`[data-delete-photo="${index}"]`)?.checked;
+    });
+    const entry = {
+      id: editingId || uid(),
+      date: document.querySelector("#anniversaryDate").value,
+      title: document.querySelector("#anniversaryTitle").value.trim(),
+      text: withEditorPrefix(document.querySelector("#anniversaryText").value.trim()),
+      location: {
+        country: countrySelect.value,
+        province: provinceSelect.value,
+        city: citySelect.value,
+        address: document.querySelector("#anniversaryAddress").value.trim(),
+      },
+      photos: [...keptPhotos, ...(newPhotos.length ? newPhotos : draftFiles.anniversaryPhotos || [])],
+    };
 
-  anniversaries = editingId
-    ? anniversaries.map((item) => (item.id === editingId ? entry : item))
-    : [...anniversaries, entry];
-  clearDraft(anniversaryDraftKey);
-  restoredAnniversaryDraft = null;
-  saveAndRender(entry.id);
-  dialog.close();
+    anniversaries = editingId
+      ? anniversaries.map((item) => (item.id === editingId ? entry : item))
+      : [...anniversaries, entry];
+    clearDraft(anniversaryDraftKey);
+    restoredAnniversaryDraft = null;
+    await saveAndRender(entry.id);
+    dialog.close();
+  } catch (error) {
+    alert(error.message || "保存失败，请稍后再试。");
+  }
 });
 
-deleteButton.addEventListener("click", () => {
+deleteButton.addEventListener("click", async () => {
   if (!editingId) return;
-  anniversaries = anniversaries.filter((item) => item.id !== editingId);
-  saveAndRender();
-  showCalendarView();
-  dialog.close();
+  try {
+    anniversaries = anniversaries.filter((item) => item.id !== editingId);
+    await saveAndRender();
+    showCalendarView();
+    dialog.close();
+  } catch (error) {
+    alert(error.message || "删除失败，请稍后再试。");
+  }
 });
 
 function renderCalendar() {
@@ -296,9 +304,9 @@ function renderCityOptions(province, selectedCity) {
   citySelect.value = selectedCity && cities.includes(selectedCity) ? selectedCity : cities[0];
 }
 
-function saveAndRender(selected) {
+async function saveAndRender(selected) {
   anniversaries.sort((a, b) => a.date.localeCompare(b.date));
-  saveSharedContent(anniversaryKey, anniversaries);
+  await saveSharedContent(anniversaryKey, anniversaries);
   renderCalendar();
   if (selected) showAnniversaryPage(selected);
 }

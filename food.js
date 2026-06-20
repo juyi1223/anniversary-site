@@ -20,33 +20,41 @@ document.querySelector("#draftMeal").addEventListener("click", () => saveDraft(m
 
 mealForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const existing = food.meals.find((meal) => meal.id === editingMealId);
-  const photos = await prepareFiles(document.querySelector("#mealPhotos"), "food/photos");
-  const meal = {
-    id: editingMealId || uid(),
-    number: existing?.number || nextMealNumber(),
-    date: document.querySelector("#mealDate").value,
-    title: document.querySelector("#mealTitle").value.trim(),
-    rating: document.querySelector("#mealRating").value,
-    text: document.querySelector("#mealText").value.trim(),
-    photos: photos.length ? photos : restoredMealDraft?.files?.mealPhotos || existing?.photos || [],
-  };
+  try {
+    const existing = food.meals.find((meal) => meal.id === editingMealId);
+    const photos = await prepareFiles(document.querySelector("#mealPhotos"), "food/photos");
+    const meal = {
+      id: editingMealId || uid(),
+      number: existing?.number || nextMealNumber(),
+      date: document.querySelector("#mealDate").value,
+      title: document.querySelector("#mealTitle").value.trim(),
+      rating: document.querySelector("#mealRating").value,
+      text: document.querySelector("#mealText").value.trim(),
+      photos: photos.length ? photos : restoredMealDraft?.files?.mealPhotos || existing?.photos || [],
+    };
 
-  food.meals = editingMealId
-    ? food.meals.map((item) => (item.id === editingMealId ? meal : item))
-    : [...food.meals, meal];
-  food.meals.sort((a, b) => b.date.localeCompare(a.date));
-  clearDraft(mealDraftKey);
-  restoredMealDraft = null;
-  saveFood();
-  mealDialog.close();
+    food.meals = editingMealId
+      ? food.meals.map((item) => (item.id === editingMealId ? meal : item))
+      : [...food.meals, meal];
+    food.meals.sort((a, b) => b.date.localeCompare(a.date));
+    clearDraft(mealDraftKey);
+    restoredMealDraft = null;
+    await saveFood();
+    mealDialog.close();
+  } catch (error) {
+    alert(error.message || "保存失败，请稍后再试。");
+  }
 });
 
-deleteMealButton.addEventListener("click", () => {
+deleteMealButton.addEventListener("click", async () => {
   if (!editingMealId) return;
-  food.meals = food.meals.filter((meal) => meal.id !== editingMealId);
-  saveFood();
-  mealDialog.close();
+  try {
+    food.meals = food.meals.filter((meal) => meal.id !== editingMealId);
+    await saveFood();
+    mealDialog.close();
+  } catch (error) {
+    alert(error.message || "删除失败，请稍后再试。");
+  }
 });
 
 function renderFood() {
@@ -139,8 +147,8 @@ function nextMealNumber() {
   return food.meals.reduce((max, meal) => Math.max(max, meal.number || 0), 0) + 1;
 }
 
-function saveFood() {
-  saveSharedContent(foodKey, food);
+async function saveFood() {
+  await saveSharedContent(foodKey, food);
   renderFood();
 }
 

@@ -98,29 +98,37 @@ countryMapViewport.addEventListener("click", (event) => {
 
 placeForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const existing = places.find((item) => item.id === editingPlaceId);
-  const photos = await prepareFiles(document.querySelector("#placePhotos"), "places/photos");
-  const entry = {
-    id: editingPlaceId || uid(),
-    country: placeCountry.value,
-    name: document.querySelector("#placeName").value.trim(),
-    text: document.querySelector("#placeText").value.trim(),
-    x: existing?.x ?? pendingPosition.x,
-    y: existing?.y ?? pendingPosition.y,
-    photos: photos.length ? photos : existing?.photos || [],
-  };
+  try {
+    const existing = places.find((item) => item.id === editingPlaceId);
+    const photos = await prepareFiles(document.querySelector("#placePhotos"), "places/photos");
+    const entry = {
+      id: editingPlaceId || uid(),
+      country: placeCountry.value,
+      name: document.querySelector("#placeName").value.trim(),
+      text: document.querySelector("#placeText").value.trim(),
+      x: existing?.x ?? pendingPosition.x,
+      y: existing?.y ?? pendingPosition.y,
+      photos: photos.length ? photos : existing?.photos || [],
+    };
 
-  places = editingPlaceId ? places.map((item) => (item.id === editingPlaceId ? entry : item)) : [...places, entry];
-  selectedCountry = entry.country;
-  savePlaces(entry.id);
-  placeDialog.close();
+    places = editingPlaceId ? places.map((item) => (item.id === editingPlaceId ? entry : item)) : [...places, entry];
+    selectedCountry = entry.country;
+    await savePlaces(entry.id);
+    placeDialog.close();
+  } catch (error) {
+    alert(error.message || "保存失败，请稍后再试。");
+  }
 });
 
-deletePlaceButton.addEventListener("click", () => {
+deletePlaceButton.addEventListener("click", async () => {
   if (!editingPlaceId) return;
-  places = places.filter((item) => item.id !== editingPlaceId);
-  savePlaces();
-  placeDialog.close();
+  try {
+    places = places.filter((item) => item.id !== editingPlaceId);
+    await savePlaces();
+    placeDialog.close();
+  } catch (error) {
+    alert(error.message || "删除失败，请稍后再试。");
+  }
 });
 
 function mountCountryOptions() {
@@ -202,8 +210,8 @@ function openPlaceEditor(place = {}) {
   placeDialog.showModal();
 }
 
-function savePlaces(selectedId) {
-  saveSharedContent(placeKey, places);
+async function savePlaces(selectedId) {
+  await saveSharedContent(placeKey, places);
   renderWorld(selectedId);
 }
 
