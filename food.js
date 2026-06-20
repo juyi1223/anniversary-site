@@ -1,6 +1,7 @@
 const foodKey = "yixin.food";
 const mealDraftKey = "meal";
 const mealGoal = 500;
+const defaultRating = "夯暴了";
 
 let food = { meals: [] };
 let editingMealId = null;
@@ -21,14 +22,16 @@ document.querySelector("#draftMeal").addEventListener("click", () => saveDraft(m
 mealForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   try {
+    const editorName = getCurrentEditorName() || "未署名";
     const existing = food.meals.find((meal) => meal.id === editingMealId);
     const photos = await prepareFiles(document.querySelector("#mealPhotos"), "food/photos");
+    const ratings = upsertMealRating(existing?.ratings || [], editorName, document.querySelector("#mealRating").value);
     const meal = {
       id: editingMealId || uid(),
       number: existing?.number || nextMealNumber(),
       date: document.querySelector("#mealDate").value,
       title: document.querySelector("#mealTitle").value.trim(),
-      rating: document.querySelector("#mealRating").value,
+      ratings,
       text: document.querySelector("#mealText").value.trim(),
       photos: photos.length ? photos : restoredMealDraft?.files?.mealPhotos || existing?.photos || [],
     };
@@ -85,9 +88,9 @@ function renderFood() {
           <div class="meal-card-body">
             <p class="entry-date">第 ${number} 顿 · ${formatDate(meal.date)}</p>
             <h3>${escapeHtml(meal.title)}</h3>
-            ${meal.rating ? `<span class="meal-rating">${escapeHtml(meal.rating)}</span>` : ""}
+            ${renderMealRatings(meal.ratings)}
             <p>${escapeHtml(meal.text || "")}</p>
-            <button class="ghost-button edit-only" data-meal="${meal.id}">编辑</button>
+            <button class="ghost-button edit-only" data-meal="${meal.id}">编辑/评价</button>
           </div>
         </article>
       `;
@@ -102,45 +105,74 @@ function renderFood() {
   });
 }
 
+function renderMealRatings(ratings = []) {
+  const activeRatings = ratings.filter((item) => item?.rating);
+  if (!activeRatings.length) return "";
+  return `
+    <div class="meal-ratings">
+      ${activeRatings
+        .map((item) => `<span class="meal-rating">${escapeHtml(item.editor)}：${escapeHtml(item.rating)}</span>`)
+        .join("")}
+    </div>
+  `;
+}
+
 function openMealEditor(meal = {}) {
   if (!isEditMode()) return;
+  const editorName = getCurrentEditorName() || "未署名";
   editingMealId = meal.id || null;
   restoredMealDraft = null;
   mealForm.reset();
   document.querySelector("#mealDate").value = meal.date || new Date().toISOString().slice(0, 10);
   document.querySelector("#mealTitle").value = meal.title || "";
-  document.querySelector("#mealRating").value = meal.rating || "夯爆了";
+  document.querySelector("#mealRating").value = meal.ratings?.find((item) => item.editor === editorName)?.rating || defaultRating;
   document.querySelector("#mealText").value = meal.text || "";
   if (!editingMealId) restoredMealDraft = restoreDraft(mealDraftKey, mealForm);
   deleteMealButton.style.visibility = editingMealId ? "visible" : "hidden";
   mealDialog.showModal();
 }
 
+function upsertMealRating(ratings, editor, rating) {
+  const nextRatings = ratings.filter((item) => item?.editor && item.editor !== editor);
+  if (rating) nextRatings.push({ editor, rating });
+  return nextRatings;
+}
+
 function normalizeFood(value) {
-  if (Array.isArray(value?.meals)) {
-    const sortedOldestFirst = [...value.meals].sort((a, b) => a.date.localeCompare(b.date));
-    sortedOldestFirst.forEach((meal, index) => {
+  const meals = Array.isArray(value?.meals)
+    ? value.meals
+    : Array.isArray(value?.brands)
+      ? value.brands.flatMap((brand) =>
+          (brand.meals || []).map((meal) => ({
+            ...meal,
+            title: meal.title || brand.name,
+          })),
+        )
+      : [];
+
+  const normalizedMeals = meals.map((meal) => ({
+    ...meal,
+    ratings: normalizeMealRatings(meal),
+  }));
+
+  [...normalizedMeals]
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .forEach((meal, index) => {
       if (!meal.number) meal.number = index + 1;
     });
-    return { meals: value.meals };
+
+  normalizedMeals.sort((a, b) => b.date.localeCompare(a.date));
+  return { meals: normalizedMeals };
+}
+
+function normalizeMealRatings(meal) {
+  if (Array.isArray(meal.ratings)) {
+    return meal.ratings.filter((item) => item?.editor && item?.rating);
   }
-  if (Array.isArray(value?.brands)) {
-    const meals = value.brands.flatMap((brand) =>
-      (brand.meals || []).map((meal) => ({
-        ...meal,
-        title: meal.title || brand.name,
-        rating: meal.rating || "",
-      })),
-    );
-    meals.sort((a, b) => b.date.localeCompare(a.date));
-    [...meals]
-      .sort((a, b) => a.date.localeCompare(b.date))
-      .forEach((meal, index) => {
-        if (!meal.number) meal.number = index + 1;
-      });
-    return { meals };
+  if (meal.rating) {
+    return [{ editor: meal.editor || "神", rating: meal.rating }];
   }
-  return { meals: [] };
+  return [];
 }
 
 function nextMealNumber() {

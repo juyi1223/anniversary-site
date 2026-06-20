@@ -115,6 +115,15 @@ textarea {
   opacity: 0.82;
 }
 
+.start-music-hint {
+  max-width: 320px;
+  margin: -12px 0 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 15px;
+  font-weight: 700;
+  text-shadow: 0 8px 18px rgba(175, 54, 105, 0.22);
+}
+
 .hero {
   min-height: 100vh;
   display: grid;
@@ -1332,6 +1341,13 @@ textarea {
   color: #fff;
   background: var(--rose-dark);
   font-size: 13px;
+}
+
+.meal-ratings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
 }
 
 .meal-card p {

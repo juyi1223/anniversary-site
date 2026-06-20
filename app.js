@@ -345,9 +345,16 @@ function mountGlobalMusic() {
   });
 
   audio.addEventListener("timeupdate", persistMusicState);
-  audio.addEventListener("pause", persistMusicState);
+  audio.addEventListener("pause", () => {
+    if (!document.hidden) persistMusicState();
+  });
   audio.addEventListener("play", persistMusicState);
-  window.addEventListener("pagehide", persistMusicState);
+  window.addEventListener("pagehide", () => {
+    YiXinStore.set(globalMusicKey, {
+      isPlaying: true,
+      currentTime: audio.currentTime || 0,
+    });
+  });
   updateMusicButton(saved.isPlaying);
 
   function updateMusicButton(isPlaying) {
