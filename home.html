@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yi&Xin's Anniversary</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="home-page">
+    <main class="hero home-hero">
+      <div class="heart-layer" id="heartLayer" aria-hidden="true"></div>
+
+      <nav class="topbar home-topbar">
+        <a class="brand" href="home.html">Yi&Xin</a>
+      </nav>
+
+      <section class="love-timer" id="loveTimerPanel" aria-label="已经在一起的时间">
+        <div class="timer-head">
+          <p>已经在一起</p>
+          <button class="timer-toggle" id="timerToggle" type="button">总天数</button>
+        </div>
+        <div class="flip-clock" id="loveTimer">
+          <div class="flip-unit"><span data-time="years">00</span><small>年</small></div>
+          <div class="flip-unit"><span data-time="months">00</span><small>月</small></div>
+          <div class="flip-unit"><span data-time="days">00</span><small>日</small></div>
+          <div class="flip-unit"><span data-time="hours">00</span><small>小时</small></div>
+          <div class="flip-unit"><span data-time="minutes">00</span><small>分钟</small></div>
+          <div class="flip-unit"><span data-time="seconds">00</span><small>秒</small></div>
+        </div>
+        <div class="day-count" id="dayCount" hidden>
+          <strong data-time="totalDays">0</strong>
+          <span>天</span>
+        </div>
+      </section>
+
+      <section class="hero-content home-hero-content">
+        <p class="eyebrow">Since 2023.09.30 16:18</p>
+        <h1>Yi&Xin's Anniversary</h1>
+      </section>
+
+      <section class="home-grid home-grid-two" aria-label="功能入口">
+        <a class="home-tile anniversary-tile" href="anniversary.html">
+          <span class="tile-index">01</span>
+          <h2>纪念日</h2>
+        </a>
+        <a class="home-tile food-tile" href="food.html">
+          <span class="tile-index">02</span>
+          <h2>500顿饭的约定</h2>
+        </a>
+      </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="cloud-config.js"></script>
+    <script src="cloud.js"></script>
+    <script src="app.js"></script>
+    <script src="home.js"></script>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-const YiXinStore = {
+﻿const YiXinStore = {
   get(key, fallback) {
     try {
       return JSON.parse(localStorage.getItem(key)) ?? fallback;
@@ -19,8 +19,8 @@ const draftPrefix = "yixin.draft.";
 const globalMusicKey = "yixin.globalMusic";
 const editorSessionKey = "yixin.currentEditor";
 const editorPasswords = {
-  "神": "031223",
-  "祖心": "040818",
+  "祎": "031223",
+  "祎心": "040818",
 };
 const uid = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
@@ -85,7 +85,7 @@ async function saveSharedContent(key, value) {
 function renderPhotos(photos = []) {
   if (!photos.length) return "";
   return `<div class="photo-grid">${photos
-    .map((photo) => `<img src="${photo.data}" alt="${photo.name || "照片"}" />`)
+    .map((photo) => `<img src="${photo.data}" alt="${photo.name || "鐓х墖"}" />`)
     .join("")}</div>`;
 }
 
@@ -111,6 +111,7 @@ function getPreferences() {
     contentMode: "view",
     deviceMode: "desktop",
   });
+  preferences.deviceMode = "desktop";
   if (preferences.contentMode === "edit" && !getCurrentEditorName()) {
     preferences.contentMode = "view";
   }
@@ -130,13 +131,11 @@ function applyPreferences() {
   const preferences = getPreferences();
   document.body.classList.toggle("view-mode", preferences.contentMode === "view");
   document.body.classList.toggle("edit-mode", preferences.contentMode === "edit");
-  document.body.classList.toggle("mobile-preview", preferences.deviceMode === "mobile");
-  document.body.classList.toggle("desktop-preview", preferences.deviceMode === "desktop");
+  document.body.classList.remove("mobile-preview");
+  document.body.classList.add("desktop-preview");
 
   document.querySelectorAll(".mode-button").forEach((button) => {
-    const active =
-      button.dataset.contentMode === preferences.contentMode ||
-      button.dataset.deviceMode === preferences.deviceMode;
+    const active = button.dataset.contentMode === preferences.contentMode;
     button.classList.toggle("active", active);
   });
 
@@ -154,10 +153,6 @@ function mountModeSwitcher() {
       <button class="mode-button" type="button" data-content-mode="edit">编辑</button>
       <button class="mode-button" type="button" data-content-mode="view">观看</button>
     </div>
-    <div class="mode-group" aria-label="设备模式">
-      <button class="mode-button" type="button" data-device-mode="desktop">电脑</button>
-      <button class="mode-button" type="button" data-device-mode="mobile">手机</button>
-    </div>
   `;
 
   switcher.addEventListener("click", (event) => {
@@ -168,10 +163,8 @@ function mountModeSwitcher() {
       return;
     }
     if (button.dataset.contentMode === "view") {
-      setPreferences({ contentMode: "view" });
-      return;
+      setPreferences({ contentMode: "view", deviceMode: "desktop" });
     }
-    if (button.dataset.deviceMode) setPreferences({ deviceMode: button.dataset.deviceMode });
   });
 
   document.body.appendChild(switcher);
@@ -188,13 +181,13 @@ function openEditorLogin() {
       <form method="dialog" class="editor-form" id="editorLoginForm">
         <header>
           <h2>进入编辑模式</h2>
-          <button class="icon-button" type="button" value="cancel" aria-label="关闭">×</button>
+          <button class="icon-button" type="button" value="cancel" aria-label="关闭">x</button>
         </header>
         <label>
           编辑人
           <select id="editorName">
-            <option value="神">神</option>
-            <option value="祖心">祖心</option>
+            <option value="祎">祎</option>
+            <option value="祎心">祎心</option>
           </select>
         </label>
         <label>
@@ -214,7 +207,7 @@ function openEditorLogin() {
       const name = dialog.querySelector("#editorName").value;
       const password = dialog.querySelector("#editorPassword").value;
       const error = dialog.querySelector("#editorLoginError");
-      if (name === "神" && password === "12345") {
+      if (name === "祎" && password === "12345") {
         error.textContent = "";
         dialog.close();
         showProposalSecret();
@@ -226,7 +219,7 @@ function openEditorLogin() {
       }
       error.textContent = "";
       setCurrentEditorName(name);
-      setPreferences({ contentMode: "edit" });
+      setPreferences({ contentMode: "edit", deviceMode: "desktop" });
       dialog.close();
     });
   }
@@ -242,8 +235,8 @@ function showProposalSecret() {
     page.id = "proposalSecretPage";
     page.className = "proposal-secret-page";
     page.innerHTML = `
-      <button class="proposal-close" type="button" aria-label="关闭">×</button>
-      <h1>就是现在，我们结婚吧！</h1>
+      <button class="proposal-close" type="button" aria-label="鍏抽棴">脳</button>
+      <h1>灏辨槸鐜板湪锛屾垜浠粨濠氬惂锛?/h1>
     `;
     document.body.appendChild(page);
     page.querySelector(".proposal-close").addEventListener("click", () => page.remove());
@@ -325,7 +318,7 @@ function mountGlobalMusic() {
   button.className = "music-toggle";
   button.type = "button";
   button.setAttribute("aria-label", "播放或暂停背景音乐");
-  button.innerHTML = `<span class="music-icon">♪</span><span class="music-text">播放音乐</span>`;
+  button.innerHTML = `<span class="music-icon">♪</span><span class="music-text">爱の小曲</span>`;
   document.body.append(audio, button);
 
   const saved = YiXinStore.get(globalMusicKey, { isPlaying: false, currentTime: 0 });
@@ -358,7 +351,7 @@ function mountGlobalMusic() {
   updateMusicButton(saved.isPlaying);
 
   function updateMusicButton(isPlaying) {
-    button.querySelector(".music-text").textContent = isPlaying ? "暂停音乐" : "播放音乐";
+    button.querySelector(".music-text").textContent = "爱の小曲";
     button.querySelector(".music-icon").textContent = isPlaying ? "Ⅱ" : "♪";
     button.classList.toggle("playing", isPlaying);
   }
@@ -377,3 +370,5 @@ document.addEventListener("DOMContentLoaded", () => {
   mountDialogCloseFix();
   mountGlobalMusic();
 });
+
+

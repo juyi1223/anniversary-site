@@ -50,6 +50,71 @@ textarea {
   overflow-x: hidden;
 }
 
+.start-page {
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 255, 255, 0.42), transparent 24%),
+    radial-gradient(circle at 80% 22%, rgba(255, 255, 255, 0.24), transparent 28%),
+    linear-gradient(135deg, #ff8fbd 0%, #ffb6d4 42%, #ffd2e3 100%);
+}
+
+.start-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+}
+
+.start-content {
+  display: grid;
+  justify-items: center;
+  gap: 34px;
+  text-align: center;
+}
+
+.start-content h1 {
+  margin: 0;
+  color: #fff;
+  font-family: "Comic Sans MS", "LXGW WenKai", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: clamp(46px, 8vw, 96px);
+  font-weight: 800;
+  letter-spacing: 0;
+  text-shadow: 0 12px 28px rgba(175, 54, 105, 0.24);
+}
+
+.start-ready-button {
+  min-width: 180px;
+  height: 58px;
+  padding: 0 30px;
+  border: 2px solid rgba(255, 255, 255, 0.82);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 18px 40px rgba(175, 54, 105, 0.22);
+  cursor: pointer;
+  font-family: "Comic Sans MS", "LXGW WenKai", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0;
+  backdrop-filter: blur(14px);
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.start-ready-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  background: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 22px 48px rgba(175, 54, 105, 0.28);
+}
+
+.start-ready-button.starting {
+  transform: scale(0.98);
+  opacity: 0.82;
+}
+
 .hero {
   min-height: 100vh;
   display: grid;
