@@ -1,0 +1,6 @@
+.agents/
+SUPABASE_SETUP.md
+.codex-static-server.cjs
+*.log
+Thumbs.db
+.DS_Store

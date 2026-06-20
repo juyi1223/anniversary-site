@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>纪念日 | Yi&Xin</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="page-header">
+      <a href="index.html" class="back-link">← 首页</a>
+      <div>
+        <p class="eyebrow">Calendar</p>
+        <h1>纪念日</h1>
+      </div>
+      <button class="primary-button" id="addAnniversary">新增纪念日</button>
+    </header>
+
+    <main class="page-shell calendar-only-shell" id="calendarView">
+      <section class="panel">
+        <div class="calendar-head">
+          <button class="icon-button" id="prevMonth" aria-label="上个月">‹</button>
+          <div class="calendar-selectors">
+            <select id="yearSelect" aria-label="选择年份"></select>
+            <select id="monthSelect" aria-label="选择月份"></select>
+          </div>
+          <button class="icon-button" id="nextMonth" aria-label="下个月">›</button>
+        </div>
+        <div class="week-row">
+          <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </section>
+
+    </main>
+
+    <main class="page-shell anniversary-detail-view" id="anniversaryView" hidden>
+      <section class="panel anniversary-full-detail" id="anniversaryFullDetail"></section>
+    </main>
+
+    <dialog class="editor-dialog" id="anniversaryDialog">
+      <form method="dialog" class="editor-form" id="anniversaryForm">
+        <header>
+          <h2>编辑纪念日</h2>
+          <button class="icon-button" type="button" value="cancel" aria-label="关闭">×</button>
+        </header>
+        <label>
+          日期
+          <input type="date" id="anniversaryDate" required />
+        </label>
+        <label>
+          标题
+          <input type="text" id="anniversaryTitle" placeholder="例如：第一次见面" required />
+        </label>
+        <label>
+          配文
+          <textarea id="anniversaryText" rows="4" placeholder="写下那天发生的事"></textarea>
+        </label>
+        <div class="form-grid location-grid">
+          <label>
+            国家
+            <select id="anniversaryCountry"></select>
+          </label>
+          <label>
+            省份 / 地区
+            <select id="anniversaryProvince"></select>
+          </label>
+          <label>
+            市区
+            <select id="anniversaryCity"></select>
+          </label>
+        </div>
+        <label>
+          详细地址
+          <input type="text" id="anniversaryAddress" placeholder="例如：西湖边、某家咖啡店、学校门口" />
+        </label>
+        <label>
+          新增照片
+          <input type="file" id="anniversaryPhotos" accept="image/*" multiple />
+        </label>
+        <section class="existing-photo-editor" id="existingPhotoEditor"></section>
+        <div class="form-actions">
+          <button type="button" class="ghost-button danger" id="deleteAnniversary">删除纪念日</button>
+          <div class="action-row">
+            <button type="button" class="ghost-button" id="draftAnniversary">保存草稿</button>
+            <button class="primary-button" value="default">保存</button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="cloud-config.js"></script>
+    <script src="cloud.js"></script>
+    <script src="app.js"></script>
+    <script src="anniversary.js"></script>
+  </body>
+</html>

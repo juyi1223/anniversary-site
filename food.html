@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>500顿饭的约定 | Yi&Xin</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="page-header">
+      <a href="index.html" class="back-link">← 首页</a>
+      <div>
+        <p class="eyebrow">Food Promise</p>
+        <h1>500顿饭的约定</h1>
+      </div>
+      <button class="primary-button" id="addMeal">记录一顿饭</button>
+    </header>
+
+    <main class="page-shell meals-shell">
+      <section class="panel meals-progress-panel">
+        <div>
+          <p class="eyebrow">Progress</p>
+          <h2>我们已经一起吃了 <span id="mealCount">0</span> 顿饭</h2>
+        </div>
+        <div class="meal-progress">
+          <div class="meal-progress-bar"><span id="mealProgressBar"></span></div>
+          <p><span id="mealRemain">还差 500 顿</span> 解锁彩蛋</p>
+        </div>
+      </section>
+
+      <section class="proposal-easter-egg" id="proposalEgg" hidden>
+        <p class="eyebrow">Unlocked</p>
+        <h2>结婚</h2>
+        <p>500顿饭的约定完成了，下一顿开始就是新的家常日子。</p>
+      </section>
+
+      <section class="meal-grid" id="mealGrid">
+        <div class="empty-state">
+          <h2>记录第一顿饭</h2>
+          <p>上传照片，写下那天吃了什么、聊了什么。</p>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="editor-dialog" id="mealDialog">
+      <form method="dialog" class="editor-form" id="mealForm">
+        <header>
+          <h2>记录一顿饭</h2>
+          <button class="icon-button" type="button" value="cancel" aria-label="关闭">×</button>
+        </header>
+        <label>
+          日期
+          <input type="date" id="mealDate" required />
+        </label>
+        <label>
+          标题
+          <input type="text" id="mealTitle" placeholder="例如：第 1 顿火锅" required />
+        </label>
+        <label>
+          评价
+          <select id="mealRating">
+            <option value="夯爆了">夯爆了</option>
+            <option value="夯">夯</option>
+            <option value="顶级">顶级</option>
+            <option value="人上人">人上人</option>
+            <option value="小屎吃">小屎吃</option>
+            <option value="小屎都不吃">小屎都不吃</option>
+          </select>
+        </label>
+        <label>
+          配文
+          <textarea id="mealText" rows="4" placeholder="今天吃了什么，发生了什么"></textarea>
+        </label>
+        <label>
+          照片
+          <input type="file" id="mealPhotos" accept="image/*" multiple />
+        </label>
+        <div class="form-actions">
+          <button type="button" class="ghost-button danger" id="deleteMeal">删除</button>
+          <div class="action-row">
+            <button type="button" class="ghost-button" id="draftMeal">保存草稿</button>
+            <button class="primary-button" value="default">保存</button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="cloud-config.js"></script>
+    <script src="cloud.js"></script>
+    <script src="app.js"></script>
+    <script src="food.js"></script>
+  </body>
+</html>

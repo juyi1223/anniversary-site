@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>我们和世界 | Yi&Xin</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="page-header">
+      <a href="index.html" class="back-link">← 首页</a>
+      <div>
+        <p class="eyebrow">World Map</p>
+        <h1>我们和世界</h1>
+      </div>
+      <button class="primary-button" id="addPlace">新增地点</button>
+    </header>
+
+    <main class="page-shell world-shell">
+      <section class="panel globe-panel flat-map-panel">
+        <div class="flat-map-layout">
+          <figure class="flat-map-stage">
+            <img src="assets/world-map-pink.png" alt="粉色海洋、白色陆地的 2D 世界平面地图" />
+          </figure>
+          <div class="globe-controls">
+            <p class="eyebrow">Pink World Map</p>
+            <h2 id="countryTitle">选择国家</h2>
+            <label>
+              国家
+              <select id="countrySelect"></select>
+            </label>
+            <div class="country-stats">
+              <span><strong id="countryPlaceCount">0</strong> 个地点</span>
+              <span><strong id="countryPhotoCount">0</strong> 张照片</span>
+            </div>
+            <p class="hint">选择国家后，在下方地图记录你们到过的具体地点。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="world-map-layout">
+        <section class="panel country-map-panel">
+          <div class="country-map-toolbar">
+            <div>
+              <p class="eyebrow">Places</p>
+              <h2 id="countryMapTitle">地点地图</h2>
+            </div>
+            <div class="zoom-actions">
+              <button class="ghost-button" id="zoomOut">缩小</button>
+              <button class="ghost-button" id="zoomReset">重置</button>
+              <button class="ghost-button" id="zoomIn">放大</button>
+            </div>
+          </div>
+          <div class="country-map-viewport" id="countryMapViewport">
+            <div class="country-map-canvas" id="countryMapCanvas">
+              <div class="country-map-shape" id="countryMapShape"></div>
+              <div id="placeMarkers"></div>
+            </div>
+          </div>
+          <p class="hint edit-only">编辑模式下，在国家地图空白处点击可以添加地点；滚轮可缩放，拖动可移动地图。</p>
+        </section>
+
+        <section class="panel detail-panel" id="placeDetail">
+          <div class="empty-state">
+            <h2>选择一个国家</h2>
+            <p>先在下拉框里选择国家，再记录你们的具体地点。</p>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <dialog class="editor-dialog" id="placeDialog">
+      <form method="dialog" class="editor-form" id="placeForm">
+        <header>
+          <h2>编辑地点</h2>
+          <button class="icon-button" type="button" value="cancel" aria-label="关闭">×</button>
+        </header>
+        <label>
+          国家
+          <select id="placeCountry"></select>
+        </label>
+        <label>
+          地点名称
+          <input type="text" id="placeName" placeholder="例如：上海外滩、东京塔、巴黎塞纳河" required />
+        </label>
+        <label>
+          配文
+          <textarea id="placeText" rows="4" placeholder="写下这个地点的故事"></textarea>
+        </label>
+        <label>
+          照片
+          <input type="file" id="placePhotos" accept="image/*" multiple />
+        </label>
+        <div class="form-actions">
+          <button type="button" class="ghost-button danger" id="deletePlace">删除</button>
+          <button class="primary-button" value="default">保存</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="cloud-config.js"></script>
+    <script src="cloud.js"></script>
+    <script src="app.js"></script>
+    <script src="world.js"></script>
+  </body>
+</html>
