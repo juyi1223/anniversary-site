@@ -1,6 +1,7 @@
 (function () {
   const config = window.YIXIN_CLOUD_CONFIG || {};
   let client = null;
+  let lastError = "";
 
   function isEnabled() {
     return Boolean(config.enabled && config.supabaseUrl && config.supabaseAnonKey && window.supabase);
@@ -23,7 +24,8 @@
       .maybeSingle();
 
     if (error) {
-      console.warn("Cloud load failed:", error.message);
+      lastError = error.message || "Cloud load failed";
+      console.warn("Cloud load failed:", lastError);
       return fallback;
     }
     return data?.content ?? fallback;
@@ -40,9 +42,11 @@
     });
 
     if (error) {
-      console.warn("Cloud save failed:", error.message);
+      lastError = error.message || "Cloud save failed";
+      console.warn("Cloud save failed:", lastError);
       return false;
     }
+    lastError = "";
     return true;
   }
 
@@ -62,7 +66,8 @@
       });
 
       if (error) {
-        console.warn("Cloud upload failed:", error.message);
+        lastError = error.message || "Cloud upload failed";
+        console.warn("Cloud upload failed:", lastError);
         continue;
       }
 
@@ -73,10 +78,15 @@
     return uploaded;
   }
 
+  function getLastError() {
+    return lastError;
+  }
+
   window.YiXinCloud = {
     isEnabled,
     loadContent,
     saveContent,
     uploadFiles,
+    getLastError,
   };
 })();
