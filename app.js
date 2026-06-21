@@ -23,7 +23,7 @@ const editorPasswords = {
   "祖心": "040818",
 };
 const musicTracks = [
-  { id: "us", title: "我们俩", src: "assets/home-music.mp3" },
+  { id: "us", title: "我们俩", src: "assets/home-music-128.mp3" },
   { id: "city-love", title: "大城小爱", src: "assets/city-love.mp3" },
 ];
 const defaultMusicTrackId = "us";

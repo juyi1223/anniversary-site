@@ -4,10 +4,10 @@ const heartLayer = document.querySelector("#heartLayer");
 const timerToggle = document.querySelector("#timerToggle");
 const loveTimer = document.querySelector("#loveTimer");
 const dayCount = document.querySelector("#dayCount");
-const isMobileLike = window.matchMedia("(max-width: 860px), (pointer: coarse)").matches;
-const heartIntervalMs = isMobileLike ? 1800 : 520;
-const initialHeartCount = isMobileLike ? 4 : 14;
-const maxHearts = isMobileLike ? 8 : 24;
+const homeIsMobileLike = window.matchMedia("(max-width: 860px), (pointer: coarse)").matches;
+const heartIntervalMs = homeIsMobileLike ? 2400 : 520;
+const initialHeartCount = homeIsMobileLike ? 2 : 14;
+const maxHearts = homeIsMobileLike ? 4 : 24;
 let timerMode = YiXinStore.get(timerModeKey, "detail");
 
 timerToggle.addEventListener("click", () => {
@@ -119,5 +119,5 @@ updateLoveTimer();
 setInterval(updateLoveTimer, 1000);
 setInterval(spawnHeart, heartIntervalMs);
 for (let index = 0; index < initialHeartCount; index += 1) {
-  setTimeout(spawnHeart, index * (isMobileLike ? 320 : 140));
+  setTimeout(spawnHeart, index * (homeIsMobileLike ? 420 : 140));
 }
