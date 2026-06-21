@@ -106,7 +106,9 @@ function renderFood() {
 }
 
 function renderMealRatings(ratings = []) {
-  const activeRatings = ratings.filter((item) => item?.rating);
+  const activeRatings = ratings
+    .map(normalizeMealRatingEditor)
+    .filter((item) => item?.rating);
   if (!activeRatings.length) return "";
   return `
     <div class="meal-ratings">
@@ -133,7 +135,9 @@ function openMealEditor(meal = {}) {
 }
 
 function upsertMealRating(ratings, editor, rating) {
-  const nextRatings = ratings.filter((item) => item?.editor && item.editor !== editor);
+  const nextRatings = ratings
+    .map(normalizeMealRatingEditor)
+    .filter((item) => item?.editor && item.editor !== editor);
   if (rating) nextRatings.push({ editor, rating });
   return nextRatings;
 }
@@ -167,12 +171,17 @@ function normalizeFood(value) {
 
 function normalizeMealRatings(meal) {
   if (Array.isArray(meal.ratings)) {
-    return meal.ratings.filter((item) => item?.editor && item?.rating);
+    return meal.ratings.map(normalizeMealRatingEditor).filter((item) => item?.editor && item?.rating);
   }
   if (meal.rating) {
-    return [{ editor: meal.editor || "神", rating: meal.rating }];
+    return [normalizeMealRatingEditor({ editor: meal.editor || getCurrentEditorName() || "神", rating: meal.rating })];
   }
   return [];
+}
+
+function normalizeMealRatingEditor(item = {}) {
+  const editor = item.editor === "祖心" ? "祖心" : "神";
+  return { ...item, editor };
 }
 
 function nextMealNumber() {

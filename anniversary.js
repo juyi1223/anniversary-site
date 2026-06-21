@@ -245,6 +245,11 @@ function renderLocation(location = {}) {
 function withEditorPrefix(text) {
   if (!text) return "";
   if (/^(神|祖心)：/.test(text)) return text;
+  const oldPrefixMatch = text.match(/^[^：:]{1,8}[：:]\s*(.*)$/);
+  if (oldPrefixMatch) {
+    const editorName = getCurrentEditorName();
+    return editorName ? `${editorName}：${oldPrefixMatch[1]}` : oldPrefixMatch[1];
+  }
   const editorName = getCurrentEditorName();
   return editorName ? `${editorName}：${text}` : text;
 }
