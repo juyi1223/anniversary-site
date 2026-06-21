@@ -24,9 +24,10 @@ const editorPasswords = {
 };
 const musicTracks = [
   { id: "us", title: "我们俩", src: "assets/home-music.mp3" },
-  { id: "city-love", title: "大城小爱", src: "assets/city-love.flac" },
+  { id: "city-love", title: "大城小爱", src: "assets/city-love.mp3" },
 ];
 const defaultMusicTrackId = "us";
+const isMobileLike = window.matchMedia("(max-width: 860px), (pointer: coarse)").matches;
 const thousandDayEggSeenKey = "yixin.thousandDayEgg.seen";
 const thousandDayEntryKey = "yixin.thousandDayEntry.created";
 const thousandDayDate = "2026-06-26";
@@ -489,7 +490,7 @@ function mountGlobalMusic() {
   const audio = document.createElement("audio");
   audio.id = "globalMusic";
   audio.loop = false;
-  audio.preload = "auto";
+  audio.preload = "metadata";
 
   const controls = document.createElement("div");
   controls.className = "music-controls";
@@ -613,6 +614,8 @@ function mountGlobalMusic() {
   }
 
   function canUseMusicTrack(trackId) {
+    const track = getMusicTrack(trackId);
+    if (track.heavy && isMobileLike) return false;
     return trackId === defaultMusicTrackId || Boolean(saved.cityLoveUnlocked);
   }
 

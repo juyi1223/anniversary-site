@@ -4,6 +4,10 @@ const heartLayer = document.querySelector("#heartLayer");
 const timerToggle = document.querySelector("#timerToggle");
 const loveTimer = document.querySelector("#loveTimer");
 const dayCount = document.querySelector("#dayCount");
+const isMobileLike = window.matchMedia("(max-width: 860px), (pointer: coarse)").matches;
+const heartIntervalMs = isMobileLike ? 1800 : 520;
+const initialHeartCount = isMobileLike ? 4 : 14;
+const maxHearts = isMobileLike ? 8 : 24;
 let timerMode = YiXinStore.get(timerModeKey, "detail");
 
 timerToggle.addEventListener("click", () => {
@@ -97,6 +101,7 @@ function diffFrom(start, end) {
 }
 
 function spawnHeart() {
+  if (!heartLayer || heartLayer.childElementCount >= maxHearts) return;
   const heart = document.createElement("span");
   heart.className = "falling-heart";
   heart.textContent = "♥";
@@ -112,7 +117,7 @@ function spawnHeart() {
 applyTimerMode();
 updateLoveTimer();
 setInterval(updateLoveTimer, 1000);
-setInterval(spawnHeart, 520);
-for (let index = 0; index < 14; index += 1) {
-  setTimeout(spawnHeart, index * 140);
+setInterval(spawnHeart, heartIntervalMs);
+for (let index = 0; index < initialHeartCount; index += 1) {
+  setTimeout(spawnHeart, index * (isMobileLike ? 320 : 140));
 }

@@ -1,9 +1,10 @@
 const musicTracks = [
   { id: "us", title: "我们俩", src: "assets/home-music.mp3" },
-  { id: "city-love", title: "大城小爱", src: "assets/city-love.flac" },
+  { id: "city-love", title: "大城小爱", src: "assets/city-love.mp3" },
 ];
 const defaultMusicTrackId = "us";
 const globalMusicKey = "yixin.globalMusic";
+const isMobileLike = window.matchMedia("(max-width: 860px), (pointer: coarse)").matches;
 
 const readyButton = document.querySelector("#readyButton");
 const startScreen = document.querySelector("#startScreen");
@@ -17,6 +18,7 @@ const saved = readMusicState();
 let activeTrackId = canUseMusicTrack(saved.trackId) ? getMusicTrack(saved.trackId).id : defaultMusicTrackId;
 let pendingRestoreTime = saved.times?.[activeTrackId] ?? saved.currentTime ?? 0;
 
+audio.preload = "metadata";
 loadTrack(activeTrackId, pendingRestoreTime);
 
 readyButton.addEventListener("click", async () => {
@@ -91,7 +93,8 @@ async function switchTrack(trackId, { autoplay = false } = {}) {
 }
 
 function updateMusicButton(isPlaying) {
-  musicToggle.querySelector(".music-text").textContent = `爱の小曲：${getMusicTrack(activeTrackId).title}`;
+  const track = getMusicTrack(activeTrackId);
+  musicToggle.querySelector(".music-text").textContent = `爱の小曲：${track.title}`;
   musicPause.querySelector(".music-icon").textContent = isPlaying ? "Ⅱ" : "♪";
   document.querySelectorAll(".music-toggle").forEach((button) => button.classList.toggle("playing", isPlaying));
 }
@@ -114,6 +117,8 @@ function readMusicState() {
 }
 
 function canUseMusicTrack(trackId) {
+  const track = getMusicTrack(trackId);
+  if (track.heavy && isMobileLike) return false;
   return trackId === defaultMusicTrackId || Boolean(saved.cityLoveUnlocked);
 }
 

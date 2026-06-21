@@ -1668,6 +1668,18 @@ body.mobile-preview .home-tile h2 {
   font-size: 20px;
 }
 
+@media (max-width: 860px), (pointer: coarse) {
+  .falling-heart {
+    filter: none;
+  }
+
+  .home-tile,
+  .love-timer,
+  .mode-switcher {
+    backdrop-filter: none;
+  }
+}
+
 @media (max-width: 380px) {
   body.mobile-preview .home-hero {
     padding-top: 142px;
