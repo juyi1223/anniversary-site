@@ -178,6 +178,7 @@ function renderDateSelectors(year, month) {
 function showAnniversaryPage(id) {
   const entry = anniversaries.find((item) => item.id === id);
   if (!entry) return;
+  const visibleText = getVisibleAnniversaryText(entry);
   calendarView.hidden = true;
   anniversaryView.hidden = false;
   fullDetail.innerHTML = `
@@ -193,7 +194,7 @@ function showAnniversaryPage(id) {
         <button class="ghost-button" id="editCurrent">编辑</button>
       </div>
     </div>
-    <p class="entry-text">${escapeHtml(entry.text || "还没有写下配文。")}</p>
+    <p class="entry-text">${escapeHtml(visibleText || "还没有写下配文。")}</p>
     ${renderPhotoGallery(entry.photos)}
   `;
   document.querySelector("#backToCalendar").addEventListener("click", showCalendarView);
@@ -202,6 +203,13 @@ function showAnniversaryPage(id) {
   document.querySelectorAll("[data-remove-photo]").forEach((button) => {
     button.addEventListener("click", () => removePhoto(id, Number(button.dataset.removePhoto)));
   });
+}
+
+function getVisibleAnniversaryText(entry) {
+  if (entry?.isThousandDayHiddenCaption) {
+    return getThousandDayCaption({ isEdit: isEditMode(), editorName: getCurrentEditorName() });
+  }
+  return entry?.text || "";
 }
 
 function showCalendarView() {
@@ -327,9 +335,30 @@ async function initAnniversaries() {
   renderCountryOptions();
   renderProvinceOptions("中国");
   anniversaries = YiXinStore.get(anniversaryKey, []);
+  upsertThousandDayEntry();
   renderCalendar();
   anniversaries = await loadSharedContent(anniversaryKey, anniversaries);
+  upsertThousandDayEntry();
   renderCalendar();
+}
+
+function upsertThousandDayEntry() {
+  if (!YiXinStore.get(thousandDayEntryKey, false)) return;
+  const existing = anniversaries.find((item) => item.isThousandDayHiddenCaption || item.date === thousandDayDate);
+  const entry = {
+    ...(existing || {}),
+    id: existing?.id || "thousand-day-1000",
+    date: thousandDayDate,
+    title: existing?.title || thousandDayTitle,
+    text: `神：${thousandDayLetter}`,
+    isThousandDayHiddenCaption: true,
+    location: existing?.location || {},
+    photos: existing?.photos || [],
+  };
+  anniversaries = existing
+    ? anniversaries.map((item) => (item.id === existing.id ? entry : item))
+    : [...anniversaries, entry];
+  YiXinStore.set(anniversaryKey, anniversaries);
 }
 
 initAnniversaries();

@@ -45,6 +45,25 @@ function updateLoveTimer() {
     dayCount.classList.remove("flip-now");
     window.requestAnimationFrame(() => dayCount.classList.add("flip-now"));
   }
+
+  maybeShowThousandDayEgg(totalDays);
+}
+
+function maybeShowThousandDayEgg(totalDays) {
+  if (
+    !shouldTriggerThousandDayEgg({
+      totalDays,
+      isEdit: isEditMode(),
+      editorName: getCurrentEditorName(),
+      hasSeen: hasSeenThousandDayEgg(),
+    })
+  ) {
+    return;
+  }
+
+  YiXinStore.set(thousandDayEntryKey, true);
+  markThousandDayEggSeen();
+  showThousandDayEgg();
 }
 
 function diffFrom(start, end) {

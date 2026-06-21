@@ -18,11 +18,16 @@
       <iframe class="site-frame" id="siteFrame" title="Yi&Xin's Anniversary"></iframe>
     </section>
 
-    <audio id="startMusic" src="assets/home-music.mp3" loop preload="auto"></audio>
-    <button class="music-toggle start-music-toggle" id="startMusicToggle" type="button" aria-label="播放或暂停背景音乐">
-      <span class="music-icon">♪</span>
-      <span class="music-text">爱の小曲</span>
-    </button>
+    <audio id="startMusic" preload="auto"></audio>
+    <div class="music-controls start-music-controls">
+      <button class="music-toggle start-music-toggle" id="startMusicToggle" type="button" aria-label="切换背景音乐">
+        <span class="music-icon">♪</span>
+        <span class="music-text">爱の小曲：我们俩</span>
+      </button>
+      <button class="music-toggle start-music-toggle" id="startMusicPause" type="button" aria-label="暂停背景音乐">
+        <span class="music-icon">♪</span>
+      </button>
+    </div>
 
     <script src="start.js"></script>
   </body>

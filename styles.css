@@ -76,7 +76,7 @@ textarea {
   display: none;
 }
 
-.start-music-toggle {
+.start-music-controls {
   z-index: 100;
 }
 
@@ -349,11 +349,17 @@ p {
   line-height: 1.7;
 }
 
-.music-toggle {
+.music-controls {
   position: fixed;
   right: 18px;
   bottom: 18px;
   z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.music-toggle {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -371,6 +377,33 @@ p {
 .music-toggle.playing {
   color: #fff;
   background: var(--rose-dark);
+}
+
+.music-pause-button {
+  justify-content: center;
+  width: 42px;
+  padding: 0;
+}
+
+.music-egg-form p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.music-egg-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.music-egg-question {
+  display: grid;
+  gap: 12px;
+}
+
+.music-egg-question[hidden] {
+  display: none;
 }
 
 .love-timer {
@@ -1325,6 +1358,101 @@ textarea {
   font-size: 24px;
 }
 
+.thousand-day-egg {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 244, 190, 0.72), transparent 30%),
+    rgba(44, 30, 22, 0.52);
+}
+
+.gold-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.gold-ribbon {
+  position: absolute;
+  top: -80px;
+  width: 10px;
+  height: 28px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #fff3a6, #d9a441 48%, #fff1bd);
+  box-shadow: 0 0 14px rgba(255, 218, 103, 0.45);
+  animation: gold-ribbon-fall linear infinite;
+}
+
+.gold-ribbon:nth-child(3n) {
+  width: 7px;
+  height: 22px;
+  background: linear-gradient(180deg, #ffd45f, #b98224);
+}
+
+.gold-ribbon:nth-child(4n) {
+  width: 14px;
+  height: 18px;
+}
+
+.thousand-day-letter {
+  position: relative;
+  z-index: 1;
+  width: min(680px, 100%);
+  max-height: min(76vh, 620px);
+  overflow: auto;
+  padding: 34px;
+  border: 1px solid rgba(218, 167, 60, 0.5);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 241, 0.98), rgba(255, 246, 224, 0.96));
+  box-shadow: 0 24px 80px rgba(50, 29, 20, 0.28);
+}
+
+.thousand-day-letter h2 {
+  margin: 4px 52px 18px 0;
+  color: var(--rose-dark);
+  font-family: "LXGW WenKai", "Kaiti SC", "STKaiti", "PingFang SC", sans-serif;
+  font-size: clamp(30px, 5vw, 48px);
+  font-weight: 600;
+}
+
+.thousand-day-letter p:last-child {
+  margin: 0;
+  color: var(--ink);
+  font-size: 19px;
+  line-height: 2;
+}
+
+.thousand-day-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 38px;
+  height: 38px;
+  font-size: 20px;
+}
+
+@keyframes gold-ribbon-fall {
+  0% {
+    transform: translate3d(0, -80px, 0) rotate(0deg);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate3d(var(--drift), calc(100vh + 110px), 0) rotate(var(--spin));
+    opacity: 0.88;
+  }
+}
+
 .meal-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -1500,13 +1628,21 @@ body.mobile-preview .day-count span {
   font-size: 8px;
 }
 
-body.mobile-preview .music-toggle {
+body.mobile-preview .music-controls {
   right: 10px;
   bottom: 58px;
+}
+
+body.mobile-preview .music-toggle {
   min-height: 30px;
   padding: 0 10px;
   font-size: 11px;
   box-shadow: 0 12px 34px rgba(64, 46, 38, 0.2);
+}
+
+body.mobile-preview .music-pause-button {
+  width: 32px;
+  padding: 0;
 }
 
 body.mobile-preview .home-grid {
