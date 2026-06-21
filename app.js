@@ -49,7 +49,7 @@ function isCityLovePreviewLogin(name, password) {
 }
 
 function shouldTriggerMusicEgg({ trackId, playCount, hasPrompted }) {
-  return trackId === "us" && playCount >= 3 && !hasPrompted;
+  return trackId === "us" && playCount >= 1 && !hasPrompted;
 }
 
 function isCityLoveAnswer(answer = "") {
