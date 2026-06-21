@@ -7,13 +7,23 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="start-page">
-    <main class="start-screen" aria-label="起始页">
+    <main class="start-screen" id="startScreen" aria-label="起始页">
       <section class="start-content">
         <h1>准备好了吗</h1>
         <button class="start-ready-button" id="readyButton" type="button">准备好了</button>
-        <p class="start-music-hint" id="startMusicHint" hidden>如果音乐没有继续，请在首页点右下角“爱の小曲”。</p>
       </section>
     </main>
+
+    <section class="site-frame-shell" id="siteFrameShell" hidden>
+      <iframe class="site-frame" id="siteFrame" title="Yi&Xin's Anniversary"></iframe>
+    </section>
+
+    <audio id="startMusic" src="assets/home-music.mp3" loop preload="auto"></audio>
+    <button class="music-toggle start-music-toggle" id="startMusicToggle" type="button" aria-label="播放或暂停背景音乐">
+      <span class="music-icon">♪</span>
+      <span class="music-text">爱の小曲</span>
+    </button>
+
     <script src="start.js"></script>
   </body>
 </html>

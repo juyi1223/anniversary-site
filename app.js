@@ -19,8 +19,8 @@ const draftPrefix = "yixin.draft.";
 const globalMusicKey = "yixin.globalMusic";
 const editorSessionKey = "yixin.currentEditor";
 const editorPasswords = {
-  "祎": "031223",
-  "祎心": "040818",
+  "神": "031223",
+  "祖心": "040818",
 };
 const uid = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
@@ -186,8 +186,8 @@ function openEditorLogin() {
         <label>
           编辑人
           <select id="editorName">
-            <option value="祎">祎</option>
-            <option value="祎心">祎心</option>
+            <option value="神">神</option>
+            <option value="祖心">祖心</option>
           </select>
         </label>
         <label>
@@ -207,7 +207,7 @@ function openEditorLogin() {
       const name = dialog.querySelector("#editorName").value;
       const password = dialog.querySelector("#editorPassword").value;
       const error = dialog.querySelector("#editorLoginError");
-      if (name === "祎" && password === "12345") {
+      if (name === "神" && password === "12345") {
         error.textContent = "";
         dialog.close();
         showProposalSecret();
@@ -308,6 +308,7 @@ function showDraftNotice(form, message) {
 }
 
 function mountGlobalMusic() {
+  if (window.self !== window.top) return;
   const audio = document.createElement("audio");
   audio.id = "globalMusic";
   audio.src = "assets/home-music.mp3";
