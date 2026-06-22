@@ -70,6 +70,10 @@ function buildSwitchMusicDetail(trackId) {
   return { trackId, unlockCityLove: trackId === "city-love" };
 }
 
+function requestCityLoveMusic() {
+  requestMusicSwitch("city-love");
+}
+
 function canSeeThousandDayCaption({ isEdit, editorName }) {
   return isEdit && editorName === "祖心";
 }
@@ -301,12 +305,13 @@ function showProposalSecret() {
     page.id = "proposalSecretPage";
     page.className = "proposal-secret-page";
     page.innerHTML = `
-      <button class="proposal-close" type="button" aria-label="鍏抽棴">脳</button>
-      <h1>灏辨槸鐜板湪锛屾垜浠粨濠氬惂锛?/h1>
+      <button class="proposal-close" type="button" aria-label="关闭">x</button>
+      <h1>就是现在，我们结婚吧？</h1>
     `;
     document.body.appendChild(page);
     page.querySelector(".proposal-close").addEventListener("click", () => page.remove());
   }
+  requestCityLoveMusic();
 }
 
 function showThousandDayEgg({ preview = false, onClose } = {}) {
@@ -343,6 +348,7 @@ function showThousandDayEgg({ preview = false, onClose } = {}) {
     onClose?.();
   });
   document.body.appendChild(page);
+  requestCityLoveMusic();
 }
 
 function showCityLoveEgg({ onSwitch } = {}) {
@@ -393,7 +399,7 @@ function showCityLoveEgg({ onSwitch } = {}) {
     error.textContent = "";
     dialog.close();
     if (onSwitch) onSwitch();
-    else requestMusicSwitch("city-love");
+    else requestCityLoveMusic();
   });
   answerInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {

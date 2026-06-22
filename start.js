@@ -52,6 +52,18 @@ audio.addEventListener("loadedmetadata", () => {
   pendingRestoreTime = 0;
 });
 audio.addEventListener("ended", async () => {
+  if (activeTrackId === "us") {
+    saved.usPlayCount = (saved.usPlayCount || 0) + 1;
+    if (shouldTriggerMusicEgg({
+      trackId: activeTrackId,
+      playCount: saved.usPlayCount,
+      hasPrompted: saved.cityLovePrompted,
+    })) {
+      saved.cityLovePrompted = true;
+      await unlockCityLoveAndSwitch();
+      return;
+    }
+  }
   audio.currentTime = 0;
   await playMusic();
 });
@@ -92,6 +104,12 @@ async function switchTrack(trackId, { autoplay = false } = {}) {
   if (autoplay) await playMusic();
 }
 
+async function unlockCityLoveAndSwitch() {
+  saved.cityLoveUnlocked = true;
+  saved.trackId = "city-love";
+  await switchTrack("city-love", { autoplay: true });
+}
+
 function updateMusicButton(isPlaying) {
   const track = getMusicTrack(activeTrackId);
   musicToggle.querySelector(".music-text").textContent = `爱の小曲：${track.title}`;
@@ -104,6 +122,8 @@ function persistMusicState() {
   saved.isPlaying = !audio.paused;
   saved.currentTime = audio.currentTime || 0;
   saved.times = { ...(saved.times || {}), [activeTrackId]: audio.currentTime || 0 };
+  saved.usPlayCount = saved.usPlayCount || 0;
+  saved.cityLovePrompted = Boolean(saved.cityLovePrompted);
   saved.cityLoveUnlocked = Boolean(saved.cityLoveUnlocked);
   localStorage.setItem(globalMusicKey, JSON.stringify(saved));
 }
@@ -130,4 +150,8 @@ function getNextMusicTrackId(trackId, isCityLoveUnlocked = true) {
   if (!isCityLoveUnlocked) return defaultMusicTrackId;
   const currentIndex = musicTracks.findIndex((track) => track.id === trackId);
   return musicTracks[(currentIndex + 1 + musicTracks.length) % musicTracks.length].id;
+}
+
+function shouldTriggerMusicEgg({ trackId, playCount, hasPrompted }) {
+  return trackId === "us" && playCount >= 1 && !hasPrompted;
 }

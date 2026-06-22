@@ -15,6 +15,7 @@ const proposalEgg = document.querySelector("#proposalEgg");
 const mealDialog = document.querySelector("#mealDialog");
 const mealForm = document.querySelector("#mealForm");
 const deleteMealButton = document.querySelector("#deleteMeal");
+let proposalMusicRequested = false;
 
 document.querySelector("#addMeal").addEventListener("click", () => openMealEditor());
 document.querySelector("#draftMeal").addEventListener("click", () => saveDraft(mealDraftKey, mealForm));
@@ -67,6 +68,10 @@ function renderFood() {
   mealRemain.textContent = total >= mealGoal ? "已经完成 500 顿" : `还差 ${remaining} 顿`;
   mealProgressBar.style.width = `${Math.min((total / mealGoal) * 100, 100)}%`;
   proposalEgg.hidden = total < mealGoal;
+  if (total >= mealGoal && !proposalMusicRequested) {
+    proposalMusicRequested = true;
+    requestCityLoveMusic();
+  }
 
   if (!total) {
     mealGrid.innerHTML = `
